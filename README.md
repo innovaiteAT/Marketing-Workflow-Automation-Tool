@@ -1,4 +1,3 @@
-# Marketing-Workflow-Automation-Tool
 # Marketing Workflow Automation Tool
 
 Internal marketing assistant for non-technical teams.
