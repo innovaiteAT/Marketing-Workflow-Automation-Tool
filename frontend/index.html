@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FastAPI MVP</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f4f4f9; }
+        #response { margin-top: 20px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <h1>FastAPI Checker</h1>
+    <!-- Clicking this button triggers checkBackend() below. -->
+    <button onclick="checkBackend()">Ping Backend</button>
+
+    <div id="response">Response will appear here...</div>
+
+    <script>
+        // Calls the backend ping route and renders the result in the response box.
+        async function checkBackend() {
+            // Grab the output area so we can show status updates and final response.
+            const display = document.getElementById('response');
+            display.innerText = "Calling backend...";
+
+            try {
+                // Request the API route served by the same FastAPI origin.
+                const response = await fetch('/ping');
+                console.log("Raw response from backend:", response);
+                // Parse the JSON payload returned by FastAPI.
+                const data = await response.json();
+                console.log("Parsed JSON data:", data);
+
+                // Show HTTP status and fields from the backend payload.
+                display.innerHTML = `<strong>HTTP:</strong> ${response.status} <br> <strong>Status:</strong> ${data.status} <br> <strong>Message:</strong> ${data.message}`;
+            } catch (error) {
+                // If the request fails, show a user-friendly message and log details.
+                display.innerText = "Error: Could not connect to backend. Is uvicorn running?";
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
