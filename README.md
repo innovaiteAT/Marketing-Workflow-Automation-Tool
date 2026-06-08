@@ -15,7 +15,7 @@ The tool is intended to help a marketing team:
 The product direction emphasizes:
 
 - Simplicity for non-technical users
-- Single unified deployment
+- Separate frontend and backend services during development
 - Fast iteration with incremental feature releases
 
 ## Current Phase
@@ -24,8 +24,8 @@ Phase 1 (in progress): Foundation and connectivity
 
 - Backend is running with FastAPI
 - Frontend is scaffolded with React + Vite + TypeScript
-- Frontend can call backend endpoint `GET /api/ping`
-- No production deployment yet
+- Frontend can call backend endpoint `GET /api/items`
+- Frontend and backend run as separate services in development, connected through the Vite proxy
 
 ## Tech Stack
 
@@ -54,12 +54,12 @@ Marketing-Workflow-Automation-Tool/
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── App.tsx
+│   │   ├── App.jsx
 │   │   ├── index.css
-│   │   └── main.tsx
+│   │   └── main.jsx
 │   ├── package.json
 │   ├── tailwind.config.js
-│   └── vite.config.ts
+│   └── vite.config.js
 ├── LICENSE
 └── README.md
 ```
@@ -100,6 +100,16 @@ Expected response:
 {"message": "Backend is alive!"}
 ```
 
+Example data endpoint:
+
+- `GET http://localhost:8000/api/items`
+
+Expected response:
+
+```json
+[{"id": 1, "name": "Item One"}]
+```
+
 ### 2) Frontend Setup
 
 Open a new terminal from the project root:
@@ -117,15 +127,36 @@ npm run dev
 
 Frontend URL: `http://localhost:5173`
 
-## Frontend-Backend Connection
+### 3) Run Both Services Together
 
-The frontend test button in `frontend/src/App.tsx` calls:
+Start the backend in one terminal:
 
-- `http://localhost:8000/api/ping`
+```powershell
+cd backend
+uvicorn main:app --reload --port 8000
+```
 
-Cross-origin requests are enabled in `backend/main.py` for:
+Start the frontend in a second terminal:
+
+```powershell
+cd frontend
+npm run dev
+```
+
+Open:
 
 - `http://localhost:5173`
+
+In this setup, Vite proxies `/api` requests to FastAPI on `http://localhost:8000`.
+
+## Frontend-Backend Connection
+
+The frontend test button in `frontend/src/App.jsx` calls:
+
+- `/api/items`
+
+In development, Vite proxies `/api` to FastAPI.
+In development, the React app runs on Vite and `/api` calls are proxied to FastAPI.
 
 ## Useful Commands
 
@@ -152,8 +183,8 @@ npm run lint
 1. Keep Phase 1 stable and verify ping works every run.
 2. Add base app layout and initial routes with React Router.
 3. Add first real marketing workflow endpoint(s) in FastAPI.
-4. Move to unified deployment by serving frontend build from backend.
-5. Add simple authentication and role boundaries for internal team usage.
+4. Add simple authentication and role boundaries for internal team usage.
+5. Add a small set of reusable marketing workflow endpoints.
 
 ## Notes
 
