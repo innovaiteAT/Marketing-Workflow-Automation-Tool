@@ -9,7 +9,7 @@ function App() {
     setStatus('loading')
 
     try {
-      const response = await fetch('/api/items')
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/items`) // Changed this URL to the actual FastAPI backend URL
       const data = await response.json()
       setItems(data)
       setStatus('success')
