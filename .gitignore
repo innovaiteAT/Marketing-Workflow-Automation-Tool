@@ -21,6 +21,10 @@ dist/
 .coverage
 htmlcov/
 
+# Local env overrides (never commit)
+.env.local
+.env.*.local
+
 # Editor/OS noise
 .vscode/
 .idea/
